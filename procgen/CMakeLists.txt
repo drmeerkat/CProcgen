@@ -16,7 +16,7 @@ if(APPLE)
   # clang defaults to 20 errors, but usually only the first one is useful
   add_compile_options(-ferror-limit=1)
   # only produce errors on mac where development is done
-  add_compile_options(-Werror -Wextra -Wshadow -Wall -Wformat=2 -Wundef -Wvla -Wmissing-include-dirs -Wnon-virtual-dtor -Wno-unused-parameter)
+  # add_compile_options(-Werror -Wextra -Wshadow -Wall -Wformat=2 -Wundef -Wvla -Wmissing-include-dirs -Wnon-virtual-dtor -Wno-unused-parameter)
 endif()
 
 if(MSVC)
@@ -36,8 +36,8 @@ if (APPLE OR UNIX)
   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -fno-omit-frame-pointer")
 endif()
 
-# include qt5
-find_package(Qt5 COMPONENTS Gui REQUIRED)
+# include qt6
+find_package(Qt6 COMPONENTS Gui REQUIRED)
 
 add_library(env
   SHARED
@@ -75,4 +75,4 @@ add_library(env
 # find libenv.h header
 target_include_directories(env PUBLIC ${LIBENV_DIR})
 
-target_link_libraries(env Qt5::Gui)
+target_link_libraries(env Qt6::Gui)

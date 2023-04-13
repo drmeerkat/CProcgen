@@ -82,6 +82,7 @@ def _attempt_configure(build_type, package):
         "-DCMAKE_PREFIX_PATH=" + ";".join(cmake_prefix_paths),
         f"-DLIBENV_DIR={gym3.libenv.get_header_dir()}",
         "../..",
+        '-DCMAKE_OSX_ARCHITECTURES="arm64"',
     ]
     if package:
         configure_cmd.append("-DPROCGEN_PACKAGE=ON")
