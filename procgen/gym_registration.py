@@ -42,11 +42,11 @@ class ToGymEnvFrameStack(ToGymEnv):
         _, prev_ob, _ = self.env.observe()
         self.env.act(np.array([ac]))
         rew, ob, first = self.env.observe()
-        if first[0]:
+        if first[0]: # equivalent to done signal
             ob = prev_ob
         info = self.env.get_info()[0]
         info['prev_ob'] = multimap(lambda x: x[0], prev_ob)
-        return multimap(lambda x: x[0], ob), rew[0], first[0], info
+        return multimap(lambda x: x[0], ob), rew[0], bool(info['gameterm']), bool(info['truncated']), info
 
     def render(self):
         # gym3 does not have a generic render method but the convention
@@ -90,3 +90,6 @@ def register_environments():
             entry_point='procgen.gym_registration:make_env',
             kwargs={"env_name": env_name},
         )
+
+# quick test code
+# python -c "import gymnasium as gym; env = gym.make('procgen:procgen-conchaser-v0', render_mode='rgb_array'); _ = env.reset(); obs = env.render(); import matplotlib.pyplot as plt; plt.figure('initial obs');plt.imshow(obs); env.step(1);obs2 = env.render();plt.figure('step obs'); plt.imshow(obs2);plt.show()"

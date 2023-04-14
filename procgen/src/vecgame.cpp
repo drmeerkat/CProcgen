@@ -266,6 +266,28 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
         s.high.int32 = INT32_MAX;
         info_types.push_back(s);
     }
+
+    {
+        struct libenv_tensortype s;
+        strcpy(s.name, "gameterm");
+        s.scalar_type = LIBENV_SCALAR_TYPE_DISCRETE;
+        s.dtype = LIBENV_DTYPE_UINT8;
+        s.ndim = 0,
+        s.low.uint8 = 0;
+        s.high.uint8 = 1;
+        info_types.push_back(s);
+    }
+
+        {
+        struct libenv_tensortype s;
+        strcpy(s.name, "truncated");
+        s.scalar_type = LIBENV_SCALAR_TYPE_DISCRETE;
+        s.dtype = LIBENV_DTYPE_UINT8;
+        s.ndim = 0,
+        s.low.uint8 = 0;
+        s.high.uint8 = 1;
+        info_types.push_back(s);
+    }
     
     if (render_human) {
         struct libenv_tensortype s;

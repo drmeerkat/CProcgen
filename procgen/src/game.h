@@ -40,6 +40,8 @@ struct StepData {
     float reward = 0.0f;
     bool done = false;
     bool level_complete = false;
+    bool truncated = false; //whether agent hits time limit or is forced reset
+    bool gameterm = false; //whether the game ends
 };
 
 struct GameOptions {

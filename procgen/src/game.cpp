@@ -132,6 +132,8 @@ void Game::step() {
     game_step();
 
     step_data.done = step_data.done || will_force_reset || (cur_time >= timeout);
+    step_data.gameterm = step_data.done;
+    step_data.truncated = will_force_reset || (cur_time >= timeout);
     total_reward += step_data.reward;
 
     if (step_data.reward != 0) {
@@ -162,6 +164,8 @@ void Game::observe() {
     *(int32_t *)(info_bufs[info_name_to_offset.at("prev_level_seed")]) = (int32_t)(prev_level_seed);
     *(uint8_t *)(info_bufs[info_name_to_offset.at("prev_level_complete")]) = (uint8_t)(step_data.level_complete);
     *(int32_t *)(info_bufs[info_name_to_offset.at("level_seed")]) = (int32_t)(current_level_seed);
+    *(int32_t *)(info_bufs[info_name_to_offset.at("gameterm")]) = (int32_t)(step_data.gameterm);
+    *(int32_t *)(info_bufs[info_name_to_offset.at("truncated")]) = (int32_t)(step_data.truncated);
 }
 
 void Game::game_init() {
