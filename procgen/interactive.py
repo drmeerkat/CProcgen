@@ -34,7 +34,7 @@ def make_interactive(vision, record_dir, **kwargs):
     env = ProcgenGym3Env(num=1, **kwargs)
     if record_dir is not None:
         env = VideoRecorderWrapper(
-            env=env, directory=record_dir, ob_key=ob_key, info_key=info_key
+            env=env, directory=record_dir, ob_key=ob_key, info_key=info_key, prefix=kwargs['env_name']+'-'
         )
     h, w, _ = env.ob_space["rgb"].shape
     return ProcgenInteractive(
