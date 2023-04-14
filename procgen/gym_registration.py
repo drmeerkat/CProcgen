@@ -1,6 +1,63 @@
+from gymnasium import logger
 from gymnasium.envs.registration import register
+from gym3.interop import multimap, np
 from gym3 import ToGymEnv, ViewerWrapper, ExtractDictObWrapper
 from .env import ENV_NAMES, ProcgenGym3Env
+
+
+class ToGymEnvFrameStack(ToGymEnv):
+    """
+    This is adopted from gym3's ToGymEnv!
+
+    Notes:
+        * The `render()` method does nothing in "human" mode, in "rgb_array" mode the info dict is checked
+            for a key named "rgb" and info["rgb"][0] is returned if present
+        * `seed()` and `close() are ignored since gym3 environments do not require these methods
+        * `reset()` is ignored if used before an episode is complete because gym3 environments
+            reset automatically, if `reset()` was called before the end of an episode, a warning is printed
+    
+    :param env: gym3 environment to adapt
+    """
+
+    def __init__(self, env, render_mode):
+        super().__init__(env)
+        self.render_mode = render_mode
+        assert render_mode in ['rgb_array', 'human'] and 'render_mode should be either rgb_array or human!'
+        self.metadata = {
+            'render_modes':['rgb_array', 'human'],
+            'render_fps': 50
+        }
+
+    def reset(self, seed=None, options=None):
+        _rew, ob, first = self.env.observe()
+        if not first[0]:
+            print("Warning: early reset ignored")
+        # The same as initial ob
+        prev_ob = ob
+        info = self.env.get_info()[0]
+        info['prev_ob'] = multimap(lambda x: x[0], prev_ob)
+        return multimap(lambda x: x[0], ob), info
+        
+    def step(self, ac):
+        _, prev_ob, _ = self.env.observe()
+        self.env.act(np.array([ac]))
+        rew, ob, first = self.env.observe()
+        if first[0]:
+            ob = prev_ob
+        info = self.env.get_info()[0]
+        info['prev_ob'] = multimap(lambda x: x[0], prev_ob)
+        return multimap(lambda x: x[0], ob), rew[0], first[0], info
+
+    def render(self):
+        # gym3 does not have a generic render method but the convention
+        # is for the info dict to contain an "rgb" entry which could contain
+        # human or agent observations
+        if self.render_mode == 'human':
+            logger.warn('Procgen doesn\'t support \'human\' render mode currently as its backend is gym3! So, calling render(mode=\'human\') has no effect.')
+        info = self.env.get_info()[0]
+        if self.render_mode == "rgb_array" and "rgb" in info:
+            # this is a hi-resolution one! human perferred view
+            return info["rgb"]
 
 
 def make_env(render_mode=None, render=False, **kwargs):
@@ -22,7 +79,7 @@ def make_env(render_mode=None, render=False, **kwargs):
     env = ExtractDictObWrapper(env, key="rgb")
     if use_viewer_wrapper:
         env = ViewerWrapper(env, tps=15, info_key="rgb")
-    gym_env = ToGymEnv(env)
+    gym_env = ToGymEnvFrameStack(env, render_mode)
     return gym_env
 
 
