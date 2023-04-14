@@ -62,6 +62,7 @@ add_library(env
   src/games/miner.cpp
   src/games/ninja.cpp
   src/games/chaser.cpp
+  src/games/conchaser.cpp
   src/games/plunder.cpp
   src/games/starpilot.cpp
   src/mazegen.cpp

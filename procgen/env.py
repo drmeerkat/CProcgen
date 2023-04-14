@@ -28,6 +28,7 @@ ENV_NAMES = [
     "ninja",
     "plunder",
     "starpilot",
+    "conchaser"
 ]
 
 EXPLORATION_LEVEL_SEEDS = {

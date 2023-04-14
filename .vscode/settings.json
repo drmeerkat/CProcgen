@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "iostream": "cpp",
+        "queue": "cpp",
+        "vector": "cpp",
+        "memory": "cpp",
+        "functional": "cpp",
+        "qcolor": "cpp",
+        "qpainter": "cpp",
+        "iosfwd": "cpp"
+    },
+    "cmake.sourceDirectory": "${workspaceFolder}/procgen",
+    "C_Cpp.errorSquiggles": "disabled"
+}
