@@ -7,7 +7,8 @@
         "functional": "cpp",
         "qcolor": "cpp",
         "qpainter": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "map": "cpp"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/procgen",
     "C_Cpp.errorSquiggles": "disabled"
