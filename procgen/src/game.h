@@ -42,6 +42,7 @@ struct StepData {
     bool level_complete = false;
     bool truncated = false; //whether agent hits time limit or is forced reset
     bool gameterm = false; //whether the game ends
+    bool can_eat = false; //whether can eat ghost or not. only has meaning in chaser/conchaser
 };
 
 struct GameOptions {

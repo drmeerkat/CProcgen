@@ -44,6 +44,10 @@ class ToGymEnvFrameStack(ToGymEnv):
         rew, ob, first = self.env.observe()
         if first[0]: # equivalent to done signal
             ob = prev_ob
+            if self.render_mode == "rgb_array" and "rgb" in info:
+                # TODO: a human player is using this, need to render the last frame!
+                # seems to be a gym3 level problem...they not rendering the last frame
+                pass            
         info = self.env.get_info()[0]
         info['prev_ob'] = multimap(lambda x: x[0], prev_ob)
         return multimap(lambda x: x[0], ob), rew[0], bool(info['gameterm']), bool(info['truncated']), info

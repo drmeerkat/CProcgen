@@ -22,7 +22,7 @@ class ProcgenInteractive(Interactive):
         super()._update(dt, keys_clicked, keys_pressed)
 
 
-def make_interactive(vision, record_dir, **kwargs):
+def make_interactive(vision, record_dir, draw_overlay, **kwargs):
     info_key = None
     ob_key = None
     if vision == "human":
@@ -34,7 +34,12 @@ def make_interactive(vision, record_dir, **kwargs):
     env = ProcgenGym3Env(num=1, **kwargs)
     if record_dir is not None:
         env = VideoRecorderWrapper(
-            env=env, directory=record_dir, ob_key=ob_key, info_key=info_key, prefix=kwargs['env_name']+'-'
+            env=env, 
+            directory=record_dir, 
+            ob_key=ob_key, 
+            info_key=info_key, 
+            prefix=kwargs["env_name"]+'-',
+            draw_overlay=draw_overlay,
         )
     h, w, _ = env.ob_space["rgb"].shape
     return ProcgenInteractive(
@@ -110,6 +115,12 @@ def main():
         default=False,
         help="use monochromatic rectangles instead of human designed assets",
     )
+    advanced_group.add_argument(
+        "--draw-overlay",
+        action="store_false",
+        default=True,
+        help="If not set, will show overlay in recordings by default",
+    )
 
     args = parser.parse_args()
 
@@ -127,7 +138,7 @@ def main():
         kwargs["start_level"] = args.level_seed
         kwargs["num_levels"] = 1
     ia = make_interactive(
-        args.vision, record_dir=args.record_dir, env_name=args.env_name, **kwargs
+        args.vision, record_dir=args.record_dir, env_name=args.env_name, draw_overlay=args.draw_overlay, **kwargs
     )
     ia.run()
 

@@ -278,9 +278,20 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
         info_types.push_back(s);
     }
 
-        {
+    {
         struct libenv_tensortype s;
         strcpy(s.name, "truncated");
+        s.scalar_type = LIBENV_SCALAR_TYPE_DISCRETE;
+        s.dtype = LIBENV_DTYPE_UINT8;
+        s.ndim = 0,
+        s.low.uint8 = 0;
+        s.high.uint8 = 1;
+        info_types.push_back(s);
+    }
+
+    {
+        struct libenv_tensortype s;
+        strcpy(s.name, "can_eat");
         s.scalar_type = LIBENV_SCALAR_TYPE_DISCRETE;
         s.dtype = LIBENV_DTYPE_UINT8;
         s.ndim = 0,

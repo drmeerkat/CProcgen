@@ -129,11 +129,12 @@ void Game::step() {
     step_data.reward = 0;
     step_data.done = false;
     step_data.level_complete = false;
+    step_data.can_eat = false;//this only has meaning in conchaser games 
     game_step();
 
-    step_data.done = step_data.done || will_force_reset || (cur_time >= timeout);
-    step_data.gameterm = step_data.done;
+    step_data.gameterm = step_data.done; //either win or lose the game
     step_data.truncated = will_force_reset || (cur_time >= timeout);
+    step_data.done = step_data.done || will_force_reset || (cur_time >= timeout);
     total_reward += step_data.reward;
 
     if (step_data.reward != 0) {
@@ -166,6 +167,7 @@ void Game::observe() {
     *(int32_t *)(info_bufs[info_name_to_offset.at("level_seed")]) = (int32_t)(current_level_seed);
     *(int32_t *)(info_bufs[info_name_to_offset.at("gameterm")]) = (int32_t)(step_data.gameterm);
     *(int32_t *)(info_bufs[info_name_to_offset.at("truncated")]) = (int32_t)(step_data.truncated);
+    *(int32_t *)(info_bufs[info_name_to_offset.at("can_eat")]) = (int32_t)(step_data.can_eat);
 }
 
 void Game::game_init() {
