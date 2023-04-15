@@ -48,6 +48,7 @@ def make_interactive(vision, record_dir, draw_overlay, **kwargs):
         info_key=info_key,
         width=w * 12,
         height=h * 12,
+        env_name=kwargs["env_name"],
     )
 
 
