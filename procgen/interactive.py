@@ -40,6 +40,7 @@ def make_interactive(vision, record_dir, draw_overlay, **kwargs):
             info_key=info_key, 
             prefix=kwargs["env_name"]+'-',
             draw_overlay=draw_overlay,
+            env_name=kwargs["env_name"],
         )
     h, w, _ = env.ob_space["rgb"].shape
     return ProcgenInteractive(
@@ -63,7 +64,10 @@ def main():
         choices=["agent", "human"],
         help="level of fidelity of observation " + default_str,
     )
-    parser.add_argument("--record-dir", help="directory to record movies to")
+    parser.add_argument(
+        "--record-dir", 
+        help="directory to record movies to"
+    )
     parser.add_argument(
         "--distribution-mode",
         default="hard",
