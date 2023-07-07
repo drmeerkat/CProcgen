@@ -1,5 +1,5 @@
 from gymnasium import logger
-from gym.envs.registration import register
+from gymnasium.envs.registration import register
 from gym3.interop import multimap, np
 from gym3 import ToGymEnv, ViewerWrapper, ExtractDictObWrapper
 from .env import ENV_NAMES, ProcgenGym3Env
@@ -96,4 +96,4 @@ def register_environments():
         )
 
 # quick test code
-# python -c "import gym; import procgen; import gymnasium; env = gym.make('procgen:procgen-conchaser-v0', render_mode='rgb_array'); _ = env.reset(); obs = env.render(); import matplotlib.pyplot as plt; plt.figure('initial obs');plt.imshow(obs); env.step(1);obs2 = env.render();plt.figure('step obs'); plt.imshow(obs2);plt.show()"
+# python -c "import gymnasium as gym; import procgen; env = gym.make('procgen:procgen-conchaser-v0', render_mode='rgb_array'); _ = env.reset(); obs = env.render(); import matplotlib.pyplot as plt; plt.figure('initial obs');plt.imshow(obs); env.step(1);obs2 = env.render();plt.figure('step obs'); plt.imshow(obs2);plt.show()"
