@@ -22,6 +22,7 @@ class VecGame {
     std::vector<struct libenv_tensortype> observation_types;
     std::vector<struct libenv_tensortype> action_types;
     std::vector<struct libenv_tensortype> info_types;
+    std::vector<int> context;
 
     int num_envs;
     int num_joint_games;
@@ -37,6 +38,7 @@ class VecGame {
     void observe();
     void act();
     void wait_for_stepping_threads();
+    void set_context();
 
   private:
     // this mutex synchronizes access to pending_games and game->is_waiting_for_step

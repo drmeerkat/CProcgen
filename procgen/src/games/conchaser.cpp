@@ -153,7 +153,12 @@ class ConfoundedChaserGame : public BasicAbstractGame {
             extra_orb_sign = 0;
         } else if (options.distribution_mode == HardMode) {
             maze_dim = 13;
-            total_enemies = 3;
+            if (context.at(0) == -1){
+                total_enemies = 3;
+            }
+            else{
+                total_enemies = 5;
+            }
             extra_orb_sign = -1;
         } else if (options.distribution_mode == ExtremeMode) {
             maze_dim = 19;

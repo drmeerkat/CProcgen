@@ -66,6 +66,7 @@ class Game {
   public:
     const std::string game_name;
     std::map<std::string, int> info_name_to_offset;
+    std::vector<int> context;
 
     GameOptions options;
 

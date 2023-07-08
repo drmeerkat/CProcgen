@@ -83,6 +83,7 @@ class BaseProcgenEnv(CEnv):
         resource_root=None,
         num_threads=4,
         render_mode=None,
+        context_len=3,
     ):
         if resource_root is None:
             resource_root = os.path.join(SCRIPT_DIR, "data", "assets") + os.sep
@@ -123,6 +124,7 @@ class BaseProcgenEnv(CEnv):
                 "resource_root": resource_root,
             }
         )
+        self.context_len = context_len
 
         self.options = options
 
@@ -133,6 +135,8 @@ class BaseProcgenEnv(CEnv):
             c_func_defs=[
                 "int get_state(libenv_env *, int, char *, int);",
                 "void set_state(libenv_env *, int, char *, int);",
+                "int get_context(libenv_env *, char *, int);",
+                "void set_context(libenv_env *, char *, int);",
             ],
         )
         # don't use the dict space for actions
@@ -152,6 +156,26 @@ class BaseProcgenEnv(CEnv):
         for env_idx in range(self.num):
             state = states[env_idx]
             self.call_c_func("set_state", env_idx, state, len(state))
+
+    def set_context(self, context):
+        # input data format is a seq of little ending bytes, 
+        # with the first four bytes being the length of the data
+        # print(type(context[0]), context)
+        byte_data = bytearray(int.to_bytes(self.context_len, length=4, byteorder='little')) 
+        byte_data += bytearray(b''.join([bytearray(int.to_bytes(c, length=4, byteorder='little')) for c in context]))
+        byte_data += bytearray(b'\xfe\xca\xfe\xca')
+        self.call_c_func("set_context", bytes(byte_data), len(byte_data))
+        assert context == [int.from_bytes(byte_data[(i+1)*4:(i+2)*4], byteorder='little') for i in range(self.context_len)]
+
+    def get_context(self):
+        buf = self._ffi.new(f"char[{MAX_STATE_SIZE}]")
+        offset = self.call_c_func("get_context", buf, MAX_STATE_SIZE)
+        byte_data = bytes(self._ffi.buffer(buf, offset))
+        context = []
+        for i in range(self.context_len):
+            context.append(int.from_bytes(byte_data[(i+1)*4:(i+2)*4], byteorder='little'))
+        # print(byte_data, context)
+        return context
 
     def get_combos(self):
         return [

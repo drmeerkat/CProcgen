@@ -34,6 +34,10 @@ Game::Game(std::string name) : game_name(name) {
     step_data.reward = 0;
     step_data.done = true;
     step_data.level_complete = false;
+
+    context.push_back(-1);
+    context.push_back(-1);
+    context.push_back(-1);
 }
 
 Game::~Game() {

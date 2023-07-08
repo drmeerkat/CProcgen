@@ -339,6 +339,11 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
         info_name_to_offset[info_types[i].name] = i;
     }
 
+    // Initialize context, each game will reset wrt this context vec
+    context.push_back(0);
+    context.push_back(1);
+    context.push_back(2);
+
     for (int n = 0; n < num_envs; n++) {
         auto name = env_names[n % num_joint_games];
 
@@ -467,6 +472,29 @@ void VecGame::wait_for_stepping_threads() {
     }
 }
 
+void VecGame::set_context() {
+    std::unique_lock<std::mutex> lock(stepping_thread_mutex);
+
+    for (int e = 0; e < num_envs; e++) {
+        const auto &game = games[e];
+        
+        // render the initial state so we don't see a black screen on the first frame
+        fassert(!game->is_waiting_for_step);
+        // fassert(!game->initial_reset_complete);
+        game->context = context;
+        if (threads.size() == 0) {
+            // special case for no threads
+            game->reset();
+            game->observe();
+            game->initial_reset_complete = true;
+        } else {
+            game->is_waiting_for_step = true;
+            pending_games.push_back(game);
+        }
+    }
+    pending_games_added.notify_all();
+}
+
 extern "C" {
     LIBENV_API int get_state(libenv_env *handle, int env_idx, char *data, int length) {
         auto venv = (VecGame *)(handle);
@@ -486,5 +514,23 @@ extern "C" {
         // after deserializing, we need to update the observation and info buffers so that the
         // next time VecGame::observe() is called, the correct data will be in the buffers
         venv->games.at(env_idx)->observe();
+    }
+
+    LIBENV_API int get_context(libenv_env *handle, char *data, int length){
+        auto venv = (VecGame *)(handle);
+        venv->wait_for_stepping_threads();
+        auto b = WriteBuffer(data, length);
+        b.write_vector_int(venv->context);
+        b.write_int(END_OF_BUFFER);
+        return b.offset;
+    }
+
+    LIBENV_API void set_context(libenv_env *handle, char *data, int length){
+        auto venv = (VecGame *)(handle);
+        venv->wait_for_stepping_threads();
+        auto b = ReadBuffer(data, length);
+        venv->context = b.read_vector_int();
+        fassert(b.read_int() == END_OF_BUFFER); 
+        venv->set_context();
     }
 }
