@@ -339,10 +339,13 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
         info_name_to_offset[info_types[i].name] = i;
     }
 
-    // Initialize context, each game will reset wrt this context vec
-    context.push_back(0);
+    // Just for initialization
+    // This will be updated by python API later on 
+    // and the game will reset w.r.t the new one
     context.push_back(1);
-    context.push_back(2);
+    context.push_back(1);
+    context.push_back(3);
+    context.push_back(-1);
 
     for (int n = 0; n < num_envs; n++) {
         auto name = env_names[n % num_joint_games];
@@ -356,6 +359,7 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
         games[n]->is_waiting_for_step = false;
         games[n]->parse_options(name, opts);
         games[n]->info_name_to_offset = info_name_to_offset;
+        games[n]->context = context;
 
         // Auto-selected a fixed_asset_seed if one wasn't specified on
         // construction
@@ -480,7 +484,6 @@ void VecGame::set_context() {
         
         // render the initial state so we don't see a black screen on the first frame
         fassert(!game->is_waiting_for_step);
-        // fassert(!game->initial_reset_complete);
         game->context = context;
         if (threads.size() == 0) {
             // special case for no threads
@@ -488,7 +491,8 @@ void VecGame::set_context() {
             game->observe();
             game->initial_reset_complete = true;
         } else {
-            game->is_waiting_for_step = true;
+            // After set context, need to reset all the environments
+            game->initial_reset_complete = false;
             pending_games.push_back(game);
         }
     }

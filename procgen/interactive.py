@@ -121,6 +121,13 @@ def main():
         help="use monochromatic rectangles instead of human designed assets",
     )
     advanced_group.add_argument(
+        "--use-seq",
+        action="store_true",
+        default=False,
+        help="use sequential levels where the new level seed is derived \
+              from the current one instead of a totally new sampled one",
+    )
+    advanced_group.add_argument(
         "--draw-overlay",
         action="store_false",
         default=True,
@@ -142,6 +149,8 @@ def main():
     if args.level_seed is not None:
         kwargs["start_level"] = args.level_seed
         kwargs["num_levels"] = 1
+    if args.use_seq:
+        kwargs['use_sequential_levels'] = True
     ia = make_interactive(
         args.vision, record_dir=args.record_dir, env_name=args.env_name, draw_overlay=args.draw_overlay, **kwargs
     )

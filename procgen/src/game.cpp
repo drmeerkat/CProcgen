@@ -38,6 +38,7 @@ Game::Game(std::string name) : game_name(name) {
     context.push_back(-1);
     context.push_back(-1);
     context.push_back(-1);
+    context.push_back(-1);
 }
 
 Game::~Game() {

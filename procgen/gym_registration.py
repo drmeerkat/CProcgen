@@ -1,8 +1,10 @@
 from gymnasium import logger
 from gymnasium.envs.registration import register
+from gymnasium.spaces import Box
 from gym3.interop import multimap, np
 from gym3 import ToGymEnv, ViewerWrapper, ExtractDictObWrapper
 from .env import ENV_NAMES, ProcgenGym3Env
+from collections import deque
 
 
 class ToGymEnvFrameStack(ToGymEnv):
@@ -17,9 +19,11 @@ class ToGymEnvFrameStack(ToGymEnv):
             reset automatically, if `reset()` was called before the end of an episode, a warning is printed
     
     :param env: gym3 environment to adapt
+
+    ML: Further adopted from raylib's framestack implementation
     """
 
-    def __init__(self, env, render_mode):
+    def __init__(self, env, render_mode, k=2):
         super().__init__(env)
         self.render_mode = render_mode
         assert render_mode in ['rgb_array', 'human'] and 'render_mode should be either rgb_array or human!'
@@ -27,6 +31,16 @@ class ToGymEnvFrameStack(ToGymEnv):
             'render_modes':['rgb_array', 'human'],
             'render_fps': 50
         }
+        # number of frames to be stacked
+        self.k = k
+        self.frames = deque([], maxlen=k)
+        single_obs_shape = self.observation_space.shape
+        self.observation_space = Box(
+            low=0,
+            high=255,
+            shape=single_obs_shape[:2] + (k * single_obs_shape[2],),
+            dtype=self.observation_space.dtype
+        )
 
     def reset(self, seed=None, options=None):
         _rew, ob, first = self.env.observe()
@@ -36,7 +50,12 @@ class ToGymEnvFrameStack(ToGymEnv):
         prev_ob = ob
         info = self.env.get_info()[0]
         info['prev_ob'] = multimap(lambda x: x[0], prev_ob)
-        return multimap(lambda x: x[0], ob), info
+        cur_ob = multimap(lambda x: x[0], ob)
+        for _ in range(self.k):
+            self.frames.append(cur_ob)
+        # return multimap(lambda x: x[0], ob), info
+        # eg: 64, 64, 3 -> 64, 64, k*3
+        return np.concatenate(self.frames, axis=2), info
         
     def step(self, ac):
         _, prev_ob, _ = self.env.observe()
@@ -45,12 +64,14 @@ class ToGymEnvFrameStack(ToGymEnv):
         if first[0]: # equivalent to done signal
             ob = prev_ob
             if self.render_mode == "rgb_array" and "rgb" in info:
-                # TODO: a human player is using this, need to render the last frame!
+                # if a human player is using this, need to render the last frame!
                 # seems to be a gym3 level problem...they are not rendering the last frame
                 pass            
         info = self.env.get_info()[0]
         info['prev_ob'] = multimap(lambda x: x[0], prev_ob)
-        return multimap(lambda x: x[0], ob), rew[0], bool(info['gameterm']), bool(info['truncated']), info
+        self.frames.append(multimap(lambda x: x[0], ob))
+        # return multimap(lambda x: x[0], ob), rew[0], bool(info['gameterm']), bool(info['truncated']), info
+        return np.concatenate(self.frames, axis=2), rew[0], bool(info['gameterm']), bool(info['truncated']), info
 
     def render(self):
         # gym3 does not have a generic render method but the convention

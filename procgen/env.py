@@ -83,7 +83,7 @@ class BaseProcgenEnv(CEnv):
         resource_root=None,
         num_threads=4,
         render_mode=None,
-        context_len=3,
+        context_len=4,
     ):
         if resource_root is None:
             resource_root = os.path.join(SCRIPT_DIR, "data", "assets") + os.sep
@@ -162,10 +162,10 @@ class BaseProcgenEnv(CEnv):
         # with the first four bytes being the length of the data
         # print(type(context[0]), context)
         byte_data = bytearray(int.to_bytes(self.context_len, length=4, byteorder='little')) 
-        byte_data += bytearray(b''.join([bytearray(int.to_bytes(c, length=4, byteorder='little')) for c in context]))
+        byte_data += bytearray(b''.join([bytearray(int.to_bytes(c, length=4, byteorder='little', signed=True)) for c in context]))
         byte_data += bytearray(b'\xfe\xca\xfe\xca')
         self.call_c_func("set_context", bytes(byte_data), len(byte_data))
-        assert context == [int.from_bytes(byte_data[(i+1)*4:(i+2)*4], byteorder='little') for i in range(self.context_len)]
+        assert context == [int.from_bytes(byte_data[(i+1)*4:(i+2)*4], byteorder='little', signed=True) for i in range(self.context_len)]
 
     def get_context(self):
         buf = self._ffi.new(f"char[{MAX_STATE_SIZE}]")
@@ -173,7 +173,7 @@ class BaseProcgenEnv(CEnv):
         byte_data = bytes(self._ffi.buffer(buf, offset))
         context = []
         for i in range(self.context_len):
-            context.append(int.from_bytes(byte_data[(i+1)*4:(i+2)*4], byteorder='little'))
+            context.append(int.from_bytes(byte_data[(i+1)*4:(i+2)*4], byteorder='little', signed=True))
         # print(byte_data, context)
         return context
 

@@ -34,6 +34,8 @@ class ConfoundedChaserGame : public BasicAbstractGame {
     int total_orbs = 0;
     int orbs_collected = 0;
     int maze_dim = 0;
+    int enemy_speed_reduction = 1;
+    int to_respawn = 1;
 
     ConfoundedChaserGame()
         : BasicAbstractGame(NAME) {
@@ -145,28 +147,12 @@ class ConfoundedChaserGame : public BasicAbstractGame {
     }
 
     void game_reset() override {
-        int extra_orb_sign = 1;
-
-        if (options.distribution_mode == EasyMode) {
-            maze_dim = 11;
-            total_enemies = 3;
-            extra_orb_sign = 0;
-        } else if (options.distribution_mode == HardMode) {
-            maze_dim = 13;
-            if (context.at(0) == -1){
-                total_enemies = 3;
-            }
-            else{
-                total_enemies = 5;
-            }
-            extra_orb_sign = -1;
-        } else if (options.distribution_mode == ExtremeMode) {
-            maze_dim = 19;
-            total_enemies = 5;
-            extra_orb_sign = 1;
-        } else {
-            fassert(false);
-        }
+        // Hardness Mode setting is replaced by context API altogether
+        maze_dim = 13;
+        enemy_speed_reduction = context.at(0);
+        to_respawn = context.at(1);
+        total_enemies = context.at(2);
+        int extra_orb_sign = context.at(3);
 
         if (maze_gen == nullptr) {
             std::shared_ptr<MazeGen> _maze_gen(new MazeGen(&rand_gen, maze_dim));
@@ -303,6 +289,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
     }
 
     void game_step() override {
+        // update all moving objs locations and call handle collisions
         BasicAbstractGame::game_step();
 
         int num_orbs = 0;
@@ -310,7 +297,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
 
         float default_enemy_speed = .5;
         // make the weakened enemies even slower
-        float vscale = can_eat_enemies() ? (default_enemy_speed * .3) : default_enemy_speed;
+        float vscale = (can_eat_enemies() && enemy_speed_reduction) ? (default_enemy_speed * .5) : default_enemy_speed;
         step_data.can_eat = can_eat_enemies();
 
         for (int j = (int)(entities.size()) - 1; j >= 0; j--) {
@@ -379,7 +366,8 @@ class ConfoundedChaserGame : public BasicAbstractGame {
             }
         };
 
-        if (num_enemies < total_enemies) {
+        // Only allow to respawn when the context is set to so
+        if (num_enemies < total_enemies && to_respawn) {
             int selected_idx = step_rand_int % free_cells.size();
             spawn_egg(free_cells[selected_idx]);
         }
