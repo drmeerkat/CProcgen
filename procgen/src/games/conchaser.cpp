@@ -148,7 +148,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
 
     void game_reset() override {
         // Hardness Mode setting is replaced by context API altogether
-        maze_dim = 13;
+        maze_dim = 11;
         enemy_speed_reduction = context.at(0);
         to_respawn = context.at(1);
         total_enemies = context.at(2);
