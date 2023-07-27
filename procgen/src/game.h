@@ -20,8 +20,8 @@ Base class used for all games, all games must inherit from this
 
 // We want all games to have same observation space. So all these
 // constants here related to observation space are constants forever.
-const int RES_W = 84;
-const int RES_H = 84;
+const int RES_W = 64;
+const int RES_H = 64;
 
 // const int RENDER_RES = 512;
 const int RENDER_RES = 84; //lower render res for easy tfboard monitor
