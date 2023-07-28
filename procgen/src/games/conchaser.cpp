@@ -99,19 +99,17 @@ class ConfoundedChaserGame : public BasicAbstractGame {
 
     int image_for_type(int type) override {
         if (type == ENEMY) {
-            // if (can_eat_enemies()) {
-
-            // needs to figure our its weakness status by its speed/locations
-            // enemies' looking doesn't change at all, always seems to be "weak"
+            if (can_eat_enemies()) {
+                // needs to figure our its weakness status by its speed/locations
+                // enemies' looking doesn't change at all, always seems to be "weak"
                 return ENEMY_WEAK;
-            
-            // } else {
-            // simulates the enemies walking movements
-            // int rem = (cur_time / 2) % 4;
-            // if (rem == 3)
-            //     rem = 1;
-            // return ENEMY + rem;
-            // }
+            } else {
+                // simulates the enemies walking movements
+                int rem = (cur_time / 2) % 4;
+                if (rem == 3)
+                    rem = 1;
+                return ENEMY + rem;
+            }
         }
 
         return BasicAbstractGame::image_for_type(type);
