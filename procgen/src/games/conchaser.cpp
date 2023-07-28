@@ -128,15 +128,13 @@ class ConfoundedChaserGame : public BasicAbstractGame {
 
         if (obj->type == LARGE_ORB) {
             eat_time = cur_time;
-            step_data.reward += ORB_REWARD*10;
+            step_data.reward += ORB_REWARD;
             obj->will_erase = true;
         } else if (obj->type == ENEMY) {
             if (can_eat_enemies()) {
                 obj->will_erase = true;
-                step_data.reward += 1.0;
             } else {
                 step_data.done = true;
-                step_data.reward += -0.1;
             }
         }
     }
