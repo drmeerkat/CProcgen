@@ -135,10 +135,10 @@ class ConfoundedChaserGame : public BasicAbstractGame {
         } else if (obj->type == ENEMY) {
             if (can_eat_enemies()) {
                 obj->will_erase = true;
-                step_data.reward += 1.0;
+                step_data.reward += 2.0;
             } else {
                 step_data.done = true;
-                step_data.reward += -2.0;
+                step_data.reward += -0.5;
             }
         }
     }
