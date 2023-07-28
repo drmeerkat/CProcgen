@@ -65,9 +65,9 @@ class ConfoundedChaserGame : public BasicAbstractGame {
         } else if (type == LARGE_ORB) {
             names.push_back("misc_assets/yellowCrystal.png");
         } else if (type == ENEMY_WEAK) {
-            // names.push_back("misc_assets/enemyWalking_1b.png");
+            names.push_back("misc_assets/enemyWalking_1b.png");
             //use a diff asset
-            names.push_back("misc_assets/enemyWalking_1.png"); 
+            // names.push_back("misc_assets/enemyWalking_1.png"); 
         } else if (type == ENEMY_EGG) {
             names.push_back("misc_assets/enemySpikey_1b.png");
         } else if (type == MAZE_WALL) {
