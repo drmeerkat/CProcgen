@@ -69,7 +69,9 @@ class ConfoundedChaserGame : public BasicAbstractGame {
             //use a diff asset
             // names.push_back("misc_assets/enemyWalking_1.png"); 
         } else if (type == ENEMY_EGG) {
-            names.push_back("misc_assets/enemySpikey_1b.png");
+            // names.push_back("misc_assets/enemySpikey_1b.png");
+            // Use a diff color enemy egg
+            names.push_back("misc_assets/enemySpikey_1.png");
         } else if (type == MAZE_WALL) {
             names.push_back("misc_assets/tileStone_slope.png");
         }
