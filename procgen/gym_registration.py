@@ -23,7 +23,7 @@ class ToGymEnvFrameStack(ToGymEnv):
     ML: Further adopted from raylib's framestack implementation
     """
 
-    def __init__(self, env, render_mode, k=2):
+    def __init__(self, env, render_mode, k=2, sep=1):
         super().__init__(env)
         self.render_mode = render_mode
         assert render_mode in ['rgb_array', 'human'] and 'render_mode should be either rgb_array or human!'
@@ -33,7 +33,8 @@ class ToGymEnvFrameStack(ToGymEnv):
         }
         # number of frames to be stacked
         self.k = k
-        self.frames = deque([], maxlen=k)
+        self.sep = sep
+        self.frames = deque([], maxlen=k*sep)
         single_obs_shape = self.observation_space.shape
         self.observation_space = Box(
             low=0,
@@ -51,11 +52,11 @@ class ToGymEnvFrameStack(ToGymEnv):
         info = self.env.get_info()[0]
         info['prev_ob'] = multimap(lambda x: x[0], prev_ob)
         cur_ob = multimap(lambda x: x[0], ob)
-        for _ in range(self.k):
+        for _ in range(self.k*self.sep):
             self.frames.append(cur_ob)
         # return multimap(lambda x: x[0], ob), info
         # eg: 64, 64, 3 -> 64, 64, k*3
-        return np.concatenate(self.frames, axis=2), info
+        return np.concatenate([self.frames[i] for i in range(len(self.frames) - 1, 0, -self.sep)], axis=2), info
         
     def step(self, ac):
         _, prev_ob, _ = self.env.observe()
@@ -71,7 +72,7 @@ class ToGymEnvFrameStack(ToGymEnv):
         info['prev_ob'] = multimap(lambda x: x[0], prev_ob)
         self.frames.append(multimap(lambda x: x[0], ob))
         # return multimap(lambda x: x[0], ob), rew[0], bool(info['gameterm']), bool(info['truncated']), info
-        return np.concatenate(self.frames, axis=2), rew[0], bool(info['gameterm']), bool(info['truncated']), info
+        return np.concatenate([self.frames[i] for i in range(len(self.frames) - 1, 0, -self.sep)], axis=2), rew[0], bool(info['gameterm']), bool(info['truncated']), info
 
     def render(self):
         # gym3 does not have a generic render method but the convention
@@ -101,11 +102,12 @@ def make_env(render_mode=None, render=False, **kwargs):
         kwargs["render_mode"] = "rgb_array"
 
     k = kwargs.pop('k', 2)
+    sep = kwargs.pop('sep', 1)
     env = ProcgenGym3Env(num=1, num_threads=0, **kwargs)
     env = ExtractDictObWrapper(env, key="rgb")
     if use_viewer_wrapper:
         env = ViewerWrapper(env, tps=15, info_key="rgb")
-    gym_env = ToGymEnvFrameStack(env, render_mode, k=k)
+    gym_env = ToGymEnvFrameStack(env, render_mode, k=k, sep=sep)
     return gym_env
 
 
