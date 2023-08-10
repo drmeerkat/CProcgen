@@ -34,6 +34,8 @@ class ToGymEnvFrameStack(ToGymEnv):
         # number of frames to be stacked
         self.k = k
         self.sep = sep
+        if self.k == 1:
+            self.sep = 1
         self.frames = deque([], maxlen=k*sep)
         single_obs_shape = self.observation_space.shape
         self.observation_space = Box(
@@ -56,7 +58,7 @@ class ToGymEnvFrameStack(ToGymEnv):
             self.frames.append(cur_ob)
         # return multimap(lambda x: x[0], ob), info
         # eg: 64, 64, 3 -> 64, 64, k*3
-        return np.concatenate([self.frames[i] for i in range(len(self.frames) - 1, 0, -self.sep)], axis=2), info
+        return np.concatenate([self.frames[i] for i in range(len(self.frames) - 1, -1, -self.sep)], axis=2), info
         
     def step(self, ac):
         _, prev_ob, _ = self.env.observe()
@@ -72,7 +74,7 @@ class ToGymEnvFrameStack(ToGymEnv):
         info['prev_ob'] = multimap(lambda x: x[0], prev_ob)
         self.frames.append(multimap(lambda x: x[0], ob))
         # return multimap(lambda x: x[0], ob), rew[0], bool(info['gameterm']), bool(info['truncated']), info
-        return np.concatenate([self.frames[i] for i in range(len(self.frames) - 1, 0, -self.sep)], axis=2), rew[0], bool(info['gameterm']), bool(info['truncated']), info
+        return np.concatenate([self.frames[i] for i in range(len(self.frames) - 1, -1, -self.sep)], axis=2), rew[0], bool(info['gameterm']), bool(info['truncated']), info
 
     def render(self):
         # gym3 does not have a generic render method but the convention
