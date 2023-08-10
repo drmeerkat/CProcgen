@@ -43,7 +43,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
         maxspeed = .5;
 
         eat_timeout = 75;
-        egg_timeout = 1;
+        egg_timeout = 50;
 
         maze_gen = nullptr;
         has_useful_vel_info = false;
