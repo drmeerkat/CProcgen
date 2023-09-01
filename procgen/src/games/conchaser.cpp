@@ -34,8 +34,8 @@ class ConfoundedChaserGame : public BasicAbstractGame {
     int total_orbs = 0;
     int orbs_collected = 0;
     int maze_dim = 0;
-    int enemy_speed_reduction = 1;
-    int to_respawn = 1;
+    int always_can_eat = 0;
+    int always_aggressive = 1;
 
     ConfoundedChaserGame()
         : BasicAbstractGame(NAME) {
@@ -149,8 +149,8 @@ class ConfoundedChaserGame : public BasicAbstractGame {
     void game_reset() override {
         // Hardness Mode setting is replaced by context API altogether
         maze_dim = 11;
-        enemy_speed_reduction = context.at(0);
-        to_respawn = context.at(1);
+        always_can_eat = context.at(0);
+        always_aggressive = context.at(1);
         total_enemies = context.at(2);
         int extra_orb_sign = context.at(3);
 
@@ -256,7 +256,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
     }
 
     bool can_eat_enemies() {
-        return cur_time - eat_time < eat_timeout;
+        return (cur_time - eat_time < eat_timeout) || always_can_eat;
     }
 
     void spawn_egg(int enemy_cell) {
@@ -297,7 +297,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
 
         float default_enemy_speed = .5;
         // make the weakened enemies even slower
-        float vscale = (can_eat_enemies() && enemy_speed_reduction) ? (default_enemy_speed * .5) : default_enemy_speed;
+        float vscale = (can_eat_enemies()) ? (default_enemy_speed * .5) : default_enemy_speed;
         step_data.can_eat = can_eat_enemies();
 
         for (int j = (int)(entities.size()) - 1; j >= 0; j--) {
@@ -326,7 +326,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
                 int agent_idx = to_grid_idx(agent->x, agent->y);
 
                 bool is_at_junction = fabs(x - round(x)) + fabs(y - round(y)) < .01;
-                bool be_agressive = step_rand_int % 2 == 0;
+                bool be_agressive = step_rand_int % 2 == 0 || always_aggressive;
 
                 if ((ent->vx == 0 && ent->vy == 0) || is_at_junction) {
                     std::vector<int> adj_elems;
@@ -367,7 +367,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
         };
 
         // Only allow to respawn when the context is set to so
-        if (num_enemies < total_enemies && to_respawn) {
+        if (num_enemies < total_enemies) {
             int selected_idx = step_rand_int % free_cells.size();
             spawn_egg(free_cells[selected_idx]);
         }
