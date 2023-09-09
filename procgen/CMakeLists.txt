@@ -40,7 +40,7 @@ endif()
 if (APPLE)
   find_package(Qt6 COMPONENTS Gui REQUIRED)
 else()
-  find_package(Qt5 COMPONENTS Gui REQUIRED)
+  find_package(Qt6 COMPONENTS Gui REQUIRED)
 endif()
 
 add_library(env
