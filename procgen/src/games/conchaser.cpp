@@ -19,7 +19,7 @@ const int ENEMY = 6;
 const int ENEMY2 = 7;
 const int ENEMY3 = 8;
 const int LARGE_ORB_TOXIC = 9;
-const int FAKE_LARGE_ORB = 10;
+const int FAKE_LARGE_ORB = 20;
 const int FAKE_ORB_TOXIC = 11;
 
 const int MARKER = 1001;
