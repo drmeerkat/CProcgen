@@ -343,7 +343,7 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
     // This will be updated by python API later on 
     // and the game will reset w.r.t the new one
     // always edible?
-    context.push_back(0);
+    context.push_back(1);
     // always agg?
     context.push_back(1);
     // number of ghosts
