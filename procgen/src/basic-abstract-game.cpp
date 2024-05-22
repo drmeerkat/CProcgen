@@ -474,6 +474,7 @@ QColor BasicAbstractGame::color_for_type(int type, int theme) {
 
         color = QColor(chunk * (new_type / (k * k) + 1) - 1, chunk * ((new_type / k) % k + 1) - 1, chunk * (new_type % k + 1) - 1);
     } else {
+        std::cout << "wrong??";
         fassert(false);
     }
 
