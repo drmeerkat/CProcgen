@@ -1063,7 +1063,7 @@ void BasicAbstractGame::draw_entity(QPainter &p, const std::shared_ptr<Entity> &
 void BasicAbstractGame::draw_entities(QPainter &p, const std::vector<std::shared_ptr<Entity>> &to_draw, int render_z) {
     std::cout << to_draw.size() << std::endl;
     for (const auto &m : to_draw) {
-        std::cout << m << std:endl;
+        std::cout << m << std::endl;
         if (m->render_z == render_z) {
             draw_entity(p, m);
         }
