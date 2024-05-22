@@ -343,8 +343,8 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
     // This will be updated by python API later on 
     // and the game will reset w.r.t the new one
     context.push_back(1);
-    context.push_back(1);
-    context.push_back(2);
+    context.push_back(0);
+    context.push_back(3);
     context.push_back(-1);
     context.push_back(0);
 
