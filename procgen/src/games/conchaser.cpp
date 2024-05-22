@@ -140,14 +140,14 @@ class ConfoundedChaserGame : public BasicAbstractGame {
 
         if (obj->type == LARGE_ORB || obj->type == FAKE_ORB_TOXIC) {
             eat_time = cur_time;
-            step_data.reward += ORB_REWARD;
+            step_data.reward += ORB_REWARD*2;
             obj->will_erase = true;
         }
         else if (obj->type == LARGE_ORB_TOXIC || obj->type == FAKE_LARGE_ORB) {
             // negative reward for eating toxic ones
             // and there is no invincible buff
             // eat_time = cur_time;
-            step_data.reward -= ORB_REWARD;
+            step_data.reward -= ORB_REWARD*2;
             obj->will_erase = true;
         } else if (obj->type == ENEMY) {
             if (can_eat_enemies()) {
