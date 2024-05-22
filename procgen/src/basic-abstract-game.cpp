@@ -474,7 +474,6 @@ QColor BasicAbstractGame::color_for_type(int type, int theme) {
 
         color = QColor(chunk * (new_type / (k * k) + 1) - 1, chunk * ((new_type / k) % k + 1) - 1, chunk * (new_type % k + 1) - 1);
     } else {
-        std::cout << "wrong??";
         fassert(false);
     }
 
@@ -953,11 +952,11 @@ void BasicAbstractGame::draw_foreground(QPainter &p, const QRect &rect) {
             draw_image(p, r2, 0, false, type, theme, 1.0, 0.0);
         }
     }
-    std::cout << "a.1";
+    std::cout << "a.1\n";
     draw_entities(p, entities, 0);
-    std::cout << "a.2";
+    std::cout << "a.2\n";
     draw_entities(p, entities, 1);
-    std::cout << "a.3";
+    std::cout << "a.3\n";
 
     if (has_useful_vel_info && (options.paint_vel_info)) {
         float infodim = rect.height() * .2;
@@ -1062,7 +1061,9 @@ void BasicAbstractGame::draw_entity(QPainter &p, const std::shared_ptr<Entity> &
 }
 
 void BasicAbstractGame::draw_entities(QPainter &p, const std::vector<std::shared_ptr<Entity>> &to_draw, int render_z) {
+    std::cout << to_draw.size();
     for (const auto &m : to_draw) {
+        std::cout << m;
         if (m->render_z == render_z) {
             draw_entity(p, m);
         }
