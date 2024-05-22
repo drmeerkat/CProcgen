@@ -92,9 +92,11 @@ void Game::render_to_buf(void *dst, int w, int h, bool antialias) {
         p.setRenderHint(QPainter::Antialiasing, true);
         p.setRenderHint(QPainter::SmoothPixmapTransform, true);
     }
-
+    std::cout << "1.1";
     QRect rect = QRect(0, 0, w, h);
+    std::cout << "1.2";
     game_draw(p, rect);
+    std::cout << "1.3";
 }
 
 void Game::reset() {
