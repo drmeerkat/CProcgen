@@ -165,8 +165,11 @@ void Game::step() {
 }
 
 void Game::observe() {
+    std::cout << "1";
     render_to_buf(render_buf, RES_W, RES_H, false);
+    std::cout << "2";
     bgr32_to_rgb888(obs_bufs[0], render_buf, RES_W, RES_H);
+    std::cout << "3";
     *reward_ptr = step_data.reward;
     *first_ptr = (uint8_t)step_data.done;
     std::cout << "6";
