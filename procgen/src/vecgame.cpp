@@ -342,10 +342,15 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
     // Just for initialization
     // This will be updated by python API later on 
     // and the game will reset w.r.t the new one
+    // always edible?
     context.push_back(0);
+    // always agg?
     context.push_back(1);
+    // number of ghosts
     context.push_back(3);
+    // number of orbs, -1,0,1->3,4,5
     context.push_back(-1);
+    // fix orb color? 1y, 2b, 0no
     context.push_back(1);
 
 
