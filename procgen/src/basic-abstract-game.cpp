@@ -949,8 +949,9 @@ void BasicAbstractGame::draw_foreground(QPainter &p, const QRect &rect) {
             int theme = theme_for_grid_obj(type);
 
             QRectF r2 = get_screen_rect(x, y + 1, 1, 1, RENDER_EPS);
-
+            std::cout << "a.1";
             draw_image(p, r2, 0, false, type, theme, 1.0, 0.0);
+            std::cout << "a.2";
         }
     }
 
