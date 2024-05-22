@@ -351,7 +351,7 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
     // number of orbs, -1,0,1->3,4,5
     context.push_back(-1);
     // fix orb color? 1y, 2b, 0no
-    context.push_back(1);
+    context.push_back(2);
 
 
     for (int n = 0; n < num_envs; n++) {
