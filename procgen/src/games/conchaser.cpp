@@ -123,6 +123,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
             //     return ENEMY + rem;
             // }
         }
+        
 
         return BasicAbstractGame::image_for_type(type);
     }
