@@ -1060,7 +1060,7 @@ void BasicAbstractGame::draw_entity(QPainter &p, const std::shared_ptr<Entity> &
             draw_image(p, r1, ent->rotation, ent->is_reflected, ent->image_type, ent->image_theme, ent->alpha, tile_ratio);
         }
         catch (...) {
-            std::cout << "Cannot render image type:" << ent->image_type << std::endl;
+            std::cout << "Cannot render image type:" << ent->image_type << " and theme:" << ent->image_theme << std::endl;
             throw 123;
         }
     }
