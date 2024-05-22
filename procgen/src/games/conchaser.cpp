@@ -285,7 +285,6 @@ class ConfoundedChaserGame : public BasicAbstractGame {
             set_obj(cell, SPACE);
         }
 
-        std::cout << "6";
 
         free_cells.clear();
         is_space_vec.clear();
@@ -299,7 +298,6 @@ class ConfoundedChaserGame : public BasicAbstractGame {
 
             is_space_vec.push_back(is_space);
         }
-        std::cout << "7";
     }
 
     bool can_eat_enemies() {
