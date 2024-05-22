@@ -231,10 +231,10 @@ class ConfoundedChaserGame : public BasicAbstractGame {
                 if (rand_gen.randint(0, 100) < 60) {
                     if (orb_color == 1){
                         // all fixed to be yellow
-                        spawn_entity_at_idx(cell, 0.4f, LARGE_ORB)
+                        spawn_entity_at_idx(cell, 0.4f, LARGE_ORB);
                     } else if (orb_color == 2){
                         // all fixed to be blue
-                        spawn_entity_at_idx(cell, 0.4f, FAKE_ORB_TOXIC)
+                        spawn_entity_at_idx(cell, 0.4f, FAKE_ORB_TOXIC);
                     } else {
                         // no change
                         spawn_entity_at_idx(cell, 0.4f, LARGE_ORB);
@@ -243,10 +243,10 @@ class ConfoundedChaserGame : public BasicAbstractGame {
                 else {
                     if (orb_color == 1){
                         // all fixed to be yellow
-                        spawn_entity_at_idx(cell, 0.4f, FAKE_LARGE_ORB)
+                        spawn_entity_at_idx(cell, 0.4f, FAKE_LARGE_ORB);
                     } else if (orb_color == 2){
                         // all fixed to be blue
-                        spawn_entity_at_idx(cell, 0.4f, LARGE_ORB_TOXIC)
+                        spawn_entity_at_idx(cell, 0.4f, LARGE_ORB_TOXIC);
                     } else {
                         // no change
                         spawn_entity_at_idx(cell, 0.4f, LARGE_ORB_TOXIC);
