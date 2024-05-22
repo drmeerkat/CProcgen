@@ -166,23 +166,16 @@ class ConfoundedChaserGame : public BasicAbstractGame {
     void game_reset() override {
         // Hardness Mode setting is replaced by context API altogether
         maze_dim = 11;
-        std::cout << "0";
         always_can_eat = context.at(0);
-        std::cout << "01";
         always_aggressive = context.at(1);
-        std::cout << "02";
         total_enemies = context.at(2);
-        std::cout << "03";
         int extra_orb_sign = context.at(3);
-        std::cout << "04";
         orb_color = context.at(4);
-        std::cout << "05";
 
         if (maze_gen == nullptr) {
             std::shared_ptr<MazeGen> _maze_gen(new MazeGen(&rand_gen, maze_dim));
             maze_gen = _maze_gen;
         }
-        std::cout << "1";
         BasicAbstractGame::game_reset();
 
         options.center_agent = false;
@@ -193,7 +186,6 @@ class ConfoundedChaserGame : public BasicAbstractGame {
         eat_time = -1 * eat_timeout;
 
         fill_elem(0, 0, main_width, main_height, MAZE_WALL);
-        std::cout << "2";
 
         maze_gen->generate_maze_no_dead_ends();
 
@@ -204,7 +196,6 @@ class ConfoundedChaserGame : public BasicAbstractGame {
         int num_quadrants = 4;
         int extra_quad = rand_gen.randn(num_quadrants);
 
-        std::cout << "3";
         for (int i = 0; i < num_quadrants; i++) {
             std::vector<int> quadrant;
             orbs_for_quadrant.push_back(1 + (i == extra_quad ? extra_orb_sign : 0));
@@ -227,7 +218,6 @@ class ConfoundedChaserGame : public BasicAbstractGame {
             }
         }
 
-        std::cout << "4";
 
         for (int i = 0; i < num_quadrants; i++) {
             int num_orbs = orbs_for_quadrant[i];
@@ -266,7 +256,6 @@ class ConfoundedChaserGame : public BasicAbstractGame {
             }
         }
 
-        std::cout << "5";
 
         free_cells = get_cells_with_type(SPACE);
         std::vector<int> selected_idxs = rand_gen.simple_choose((int)(free_cells.size()), 1 + total_enemies);
@@ -310,6 +299,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
 
             is_space_vec.push_back(is_space);
         }
+        std::cout << "7";
     }
 
     bool can_eat_enemies() {
