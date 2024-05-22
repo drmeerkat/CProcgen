@@ -952,11 +952,8 @@ void BasicAbstractGame::draw_foreground(QPainter &p, const QRect &rect) {
             draw_image(p, r2, 0, false, type, theme, 1.0, 0.0);
         }
     }
-    std::cout << "a.1\n";
     draw_entities(p, entities, 0);
-    std::cout << "a.2\n";
     draw_entities(p, entities, 1);
-    std::cout << "a.3\n";
 
     if (has_useful_vel_info && (options.paint_vel_info)) {
         float infodim = rect.height() * .2;
@@ -1009,9 +1006,7 @@ void BasicAbstractGame::draw_background(QPainter &p, const QRect &rect) {
 
 void BasicAbstractGame::game_draw(QPainter &p, const QRect &rect) {
     draw_background(p, rect);
-    std::cout << "a\n";
     draw_foreground(p, rect);
-    std::cout << "b\n";
 }
 
 void BasicAbstractGame::match_aspect_ratio(const std::shared_ptr<Entity> &ent, bool match_width) {
@@ -1056,20 +1051,12 @@ void BasicAbstractGame::draw_entity(QPainter &p, const std::shared_ptr<Entity> &
     if (should_draw_entity(ent)) {
         QRectF r1 = get_object_rect(ent);
         float tile_ratio = get_tile_aspect_ratio(ent);
-        try{
-            draw_image(p, r1, ent->rotation, ent->is_reflected, ent->image_type, ent->image_theme, ent->alpha, tile_ratio);
-        }
-        catch (...) {
-            std::cout << "Cannot render image type:" << ent->image_type << " and theme:" << ent->image_theme << std::endl;
-            throw 123;
-        }
+        draw_image(p, r1, ent->rotation, ent->is_reflected, ent->image_type, ent->image_theme, ent->alpha, tile_ratio);
     }
 }
 
 void BasicAbstractGame::draw_entities(QPainter &p, const std::vector<std::shared_ptr<Entity>> &to_draw, int render_z) {
-    std::cout << to_draw.size() << std::endl;
     for (const auto &m : to_draw) {
-        std::cout << m << std::endl;
         if (m->render_z == render_z) {
             draw_entity(p, m);
         }

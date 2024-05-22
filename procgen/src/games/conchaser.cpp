@@ -71,7 +71,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
         } else if (type == LARGE_ORB_TOXIC) {
             names.push_back("misc_assets/gemBlue.png");
         } else if (type == FAKE_LARGE_ORB) {
-            names.push_back("misc_assets/genYellow.png");
+            names.push_back("misc_assets/gemYellow.png");
         } else if (type == FAKE_ORB_TOXIC) {
             names.push_back("misc_assets/gemBlue.png");
         } else if (type == ENEMY_WEAK) {
@@ -123,7 +123,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
             //     return ENEMY + rem;
             // }
         }
-        
+
 
         return BasicAbstractGame::image_for_type(type);
     }
