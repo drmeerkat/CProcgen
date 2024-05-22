@@ -1056,7 +1056,13 @@ void BasicAbstractGame::draw_entity(QPainter &p, const std::shared_ptr<Entity> &
     if (should_draw_entity(ent)) {
         QRectF r1 = get_object_rect(ent);
         float tile_ratio = get_tile_aspect_ratio(ent);
-        draw_image(p, r1, ent->rotation, ent->is_reflected, ent->image_type, ent->image_theme, ent->alpha, tile_ratio);
+        try{
+            draw_image(p, r1, ent->rotation, ent->is_reflected, ent->image_type, ent->image_theme, ent->alpha, tile_ratio);
+        }
+        catch (...) {
+            std::cout << ent->image_type << std::endl;
+            throw 123;
+        }
     }
 }
 
