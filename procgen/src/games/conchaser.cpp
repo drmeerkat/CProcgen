@@ -166,12 +166,17 @@ class ConfoundedChaserGame : public BasicAbstractGame {
     void game_reset() override {
         // Hardness Mode setting is replaced by context API altogether
         maze_dim = 11;
-        always_can_eat = context.at(0);
-        always_aggressive = context.at(1);
-        total_enemies = context.at(2);
-        int extra_orb_sign = context.at(3);
         std::cout << "0";
+        always_can_eat = context.at(0);
+        std::cout << "01";
+        always_aggressive = context.at(1);
+        std::cout << "02";
+        total_enemies = context.at(2);
+        std::cout << "03";
+        int extra_orb_sign = context.at(3);
+        std::cout << "04";
         orb_color = context.at(4);
+        std::cout << "05";
 
         if (maze_gen == nullptr) {
             std::shared_ptr<MazeGen> _maze_gen(new MazeGen(&rand_gen, maze_dim));
