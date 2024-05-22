@@ -127,9 +127,7 @@ static void stepping_worker(std::mutex &stepping_thread_mutex,
         // the environment and produce the initial observation
         if (!game->initial_reset_complete) {
             game->reset();
-            std::cout << "7";
             game->observe();
-            std::cout << "8";
             game->initial_reset_complete = true;
         } else{
             game->step();

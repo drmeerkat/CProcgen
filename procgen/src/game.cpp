@@ -169,12 +169,19 @@ void Game::observe() {
     bgr32_to_rgb888(obs_bufs[0], render_buf, RES_W, RES_H);
     *reward_ptr = step_data.reward;
     *first_ptr = (uint8_t)step_data.done;
+    std::cout << "6";
     *(int32_t *)(info_bufs[info_name_to_offset.at("prev_level_seed")]) = (int32_t)(prev_level_seed);
+    std::cout << "7";
     *(uint8_t *)(info_bufs[info_name_to_offset.at("prev_level_complete")]) = (uint8_t)(step_data.level_complete);
+    std::cout << "8";
     *(int32_t *)(info_bufs[info_name_to_offset.at("level_seed")]) = (int32_t)(current_level_seed);
+    std::cout << "9";
     *(int32_t *)(info_bufs[info_name_to_offset.at("gameterm")]) = (int32_t)(step_data.gameterm);
+    std::cout << "10";
     *(int32_t *)(info_bufs[info_name_to_offset.at("truncated")]) = (int32_t)(step_data.truncated);
+    std::cout << "11";
     *(int32_t *)(info_bufs[info_name_to_offset.at("can_eat")]) = (int32_t)(step_data.can_eat);
+    std::cout << "12";
 }
 
 void Game::game_init() {
