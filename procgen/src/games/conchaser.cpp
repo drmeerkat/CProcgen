@@ -170,6 +170,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
         always_aggressive = context.at(1);
         total_enemies = context.at(2);
         int extra_orb_sign = context.at(3);
+        std::cout << "0";
         orb_color = context.at(4);
 
         if (maze_gen == nullptr) {
