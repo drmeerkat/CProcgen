@@ -1008,7 +1008,9 @@ void BasicAbstractGame::draw_background(QPainter &p, const QRect &rect) {
 
 void BasicAbstractGame::game_draw(QPainter &p, const QRect &rect) {
     draw_background(p, rect);
+    std::cout << "a";
     draw_foreground(p, rect);
+    std::cout << "b";
 }
 
 void BasicAbstractGame::match_aspect_ratio(const std::shared_ptr<Entity> &ent, bool match_width) {
