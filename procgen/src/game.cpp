@@ -35,10 +35,12 @@ Game::Game(std::string name) : game_name(name) {
     step_data.done = true;
     step_data.level_complete = false;
 
+    // Just for initialization, will update later on by calling set_context()
+    context.push_back(1);
+    context.push_back(1);
+    context.push_back(3);
     context.push_back(-1);
-    context.push_back(-1);
-    context.push_back(-1);
-    context.push_back(-1);
+    context.push_back(0);
 }
 
 Game::~Game() {

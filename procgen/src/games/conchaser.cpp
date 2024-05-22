@@ -18,6 +18,9 @@ const int MAZE_WALL = 5;
 const int ENEMY = 6;
 const int ENEMY2 = 7;
 const int ENEMY3 = 8;
+const int LARGE_ORB_TOXIC = 9;
+const int FAKE_LARGE_ORB = 10;
+const int FAKE_ORB_TOXIC = 11;
 
 const int MARKER = 1001;
 const int ORB = 1002;
@@ -36,6 +39,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
     int maze_dim = 0;
     int always_can_eat = 0;
     int always_aggressive = 1;
+    int orb_color = 0;
 
     ConfoundedChaserGame()
         : BasicAbstractGame(NAME) {
@@ -63,7 +67,13 @@ class ConfoundedChaserGame : public BasicAbstractGame {
         } else if (type == ENEMY3) {
             names.push_back("misc_assets/enemyFlying_3.png");
         } else if (type == LARGE_ORB) {
-            names.push_back("misc_assets/yellowCrystal.png");
+            names.push_back("misc_assets/gemYellow.png");
+        } else if (type == LARGE_ORB_TOXIC) {
+            names.push_back("misc_assets/gemBlue.png");
+        } else if (type == FAKE_LARGE_ORB) {
+            names.push_back("misc_assets/genYellow.png");
+        } else if (type == FAKE_ORB_TOXIC) {
+            names.push_back("misc_assets/gemBlue.png");
         } else if (type == ENEMY_WEAK) {
             names.push_back("misc_assets/enemyWalking_1b.png");
             //use a diff asset
@@ -128,9 +138,16 @@ class ConfoundedChaserGame : public BasicAbstractGame {
     void handle_agent_collision(const std::shared_ptr<Entity> &obj) override {
         BasicAbstractGame::handle_agent_collision(obj);
 
-        if (obj->type == LARGE_ORB) {
+        if (obj->type == LARGE_ORB || obj->type == FAKE_ORB_TOXIC) {
             eat_time = cur_time;
             step_data.reward += ORB_REWARD;
+            obj->will_erase = true;
+        }
+        else if (obj->type == LARGE_ORB_TOXIC || obj->type == FAKE_LARGE_ORB) {
+            // negative reward for eating toxic ones
+            // and there is no invincible buff
+            // eat_time = cur_time;
+            step_data.reward -= ORB_REWARD;
             obj->will_erase = true;
         } else if (obj->type == ENEMY) {
             if (can_eat_enemies()) {
@@ -153,6 +170,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
         always_aggressive = context.at(1);
         total_enemies = context.at(2);
         int extra_orb_sign = context.at(3);
+        orb_color = context.at(4);
 
         if (maze_gen == nullptr) {
             std::shared_ptr<MazeGen> _maze_gen(new MazeGen(&rand_gen, maze_dim));
@@ -208,7 +226,32 @@ class ConfoundedChaserGame : public BasicAbstractGame {
 
             for (int j : selected_idxs) {
                 int cell = quadrant[j];
-                spawn_entity_at_idx(cell, 0.4f, LARGE_ORB);
+                // decide whether to spawn a toxic orb
+                // currently toxic orb chance is set at 40%
+                if (rand_gen.randint(0, 100) < 60) {
+                    if (orb_color == 1){
+                        // all fixed to be yellow
+                        spawn_entity_at_idx(cell, 0.4f, LARGE_ORB)
+                    } else if (orb_color == 2){
+                        // all fixed to be blue
+                        spawn_entity_at_idx(cell, 0.4f, FAKE_ORB_TOXIC)
+                    } else {
+                        // no change
+                        spawn_entity_at_idx(cell, 0.4f, LARGE_ORB);
+                    }
+                }
+                else {
+                    if (orb_color == 1){
+                        // all fixed to be yellow
+                        spawn_entity_at_idx(cell, 0.4f, FAKE_LARGE_ORB)
+                    } else if (orb_color == 2){
+                        // all fixed to be blue
+                        spawn_entity_at_idx(cell, 0.4f, LARGE_ORB_TOXIC)
+                    } else {
+                        // no change
+                        spawn_entity_at_idx(cell, 0.4f, LARGE_ORB_TOXIC);
+                    }
+                }
                 set_obj(cell, MARKER);
             }
         }
@@ -326,7 +369,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
                 int agent_idx = to_grid_idx(agent->x, agent->y);
 
                 bool is_at_junction = fabs(x - round(x)) + fabs(y - round(y)) < .01;
-                bool be_agressive = step_rand_int % 2 == 0 || always_aggressive;
+                bool be_agressive = step_rand_int % 2 == 0 || always_aggressive == 1;
 
                 if ((ent->vx == 0 && ent->vy == 0) || is_at_junction) {
                     std::vector<int> adj_elems;

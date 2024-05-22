@@ -346,6 +346,8 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
     context.push_back(1);
     context.push_back(3);
     context.push_back(-1);
+    context.push_back(0);
+
 
     for (int n = 0; n < num_envs; n++) {
         auto name = env_names[n % num_joint_games];
