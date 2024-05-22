@@ -340,7 +340,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
 
         float default_enemy_speed = .5;
         // make the weakened enemies even slower
-        float vscale = (can_eat_enemies()) ? (default_enemy_speed * .5) : default_enemy_speed;
+        float vscale = (can_eat_enemies() && always_aggressive != 1) ? (default_enemy_speed * .5) : default_enemy_speed;
         step_data.can_eat = can_eat_enemies();
 
         for (int j = (int)(entities.size()) - 1; j >= 0; j--) {
@@ -363,7 +363,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
                 float x = ent->x - .5;
                 float y = ent->y - .5;
 
-                int dist_scale = can_eat_enemies() ? -1 : 1;
+                int dist_scale = (can_eat_enemies() && always_aggressive != 1) ? -1 : 1;
 
                 int enemy_idx = to_grid_idx(x, y);
                 int agent_idx = to_grid_idx(agent->x, agent->y);
