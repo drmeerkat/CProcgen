@@ -342,11 +342,11 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
     // Just for initialization
     // This will be updated by python API later on 
     // and the game will reset w.r.t the new one
-    context.push_back(1);
+    context.push_back(0);
     context.push_back(1);
     context.push_back(3);
     context.push_back(-1);
-    context.push_back(0);
+    context.push_back(1);
 
 
     for (int n = 0; n < num_envs; n++) {
