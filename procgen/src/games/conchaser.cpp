@@ -141,14 +141,14 @@ class ConfoundedChaserGame : public BasicAbstractGame {
 
         if (obj->type == LARGE_ORB || obj->type == FAKE_ORB_TOXIC) {
             eat_time = cur_time;
-            step_data.reward += ORB_REWARD*2;
+            step_data.reward += ORB_REWARD*5;
             obj->will_erase = true;
         }
         else if (obj->type == LARGE_ORB_TOXIC || obj->type == FAKE_LARGE_ORB) {
             // negative reward for eating toxic ones
             // and there is no invincible buff
             // eat_time = cur_time;
-            step_data.reward -= ORB_REWARD*2;
+            step_data.reward -= ORB_REWARD*5;
             obj->will_erase = true;
         } else if (obj->type == ENEMY) {
             if (can_eat_enemies()) {
@@ -228,12 +228,12 @@ class ConfoundedChaserGame : public BasicAbstractGame {
             for (int j : selected_idxs) {
                 int cell = quadrant[j];
                 // decide whether to spawn a toxic orb
-                // currently toxic orb chance is set at 40%
-                if (rand_gen.randint(0, 100) < 60) {
-                    if (orb_color == 1){
+                // currently toxic orb chance is set at 60%
+                if (rand_gen.randint(0, 100) < 40) {
+                    if (orb_color > 0 && orb_color < 4){
                         // all fixed to be yellow
                         spawn_entity_at_idx(cell, 0.4f, LARGE_ORB);
-                    } else if (orb_color == 2){
+                    } else if (orb_color >= 4){
                         // all fixed to be blue
                         spawn_entity_at_idx(cell, 0.4f, FAKE_ORB_TOXIC);
                     } else {
@@ -242,10 +242,10 @@ class ConfoundedChaserGame : public BasicAbstractGame {
                     }
                 }
                 else {
-                    if (orb_color == 1){
+                    if (orb_color > 0 && orb_color < 4){
                         // all fixed to be yellow
                         spawn_entity_at_idx(cell, 0.4f, FAKE_LARGE_ORB);
-                    } else if (orb_color == 2){
+                    } else if (orb_color >= 4){
                         // all fixed to be blue
                         spawn_entity_at_idx(cell, 0.4f, LARGE_ORB_TOXIC);
                     } else {
