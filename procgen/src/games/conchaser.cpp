@@ -302,7 +302,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
     }
 
     bool can_eat_enemies() {
-        return (cur_time - eat_time < eat_timeout) || always_can_eat;
+        return (cur_time - eat_time < eat_timeout) || always_can_eat == 0;
     }
 
     void spawn_egg(int enemy_cell) {
@@ -343,7 +343,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
 
         float default_enemy_speed = .5;
         // make the weakened enemies even slower
-        float vscale = (can_eat_enemies() && always_aggressive != 1) ? (default_enemy_speed * .5) : default_enemy_speed;
+        float vscale = (can_eat_enemies() && always_aggressive == 0) ? (default_enemy_speed * .5) : default_enemy_speed;
         step_data.can_eat = can_eat_enemies();
 
         for (int j = (int)(entities.size()) - 1; j >= 0; j--) {
@@ -366,13 +366,13 @@ class ConfoundedChaserGame : public BasicAbstractGame {
                 float x = ent->x - .5;
                 float y = ent->y - .5;
 
-                int dist_scale = (can_eat_enemies() && always_aggressive != 1) ? -1 : 1;
+                int dist_scale = (can_eat_enemies() && always_aggressive == 0) ? -1 : 1;
 
                 int enemy_idx = to_grid_idx(x, y);
                 int agent_idx = to_grid_idx(agent->x, agent->y);
 
                 bool is_at_junction = fabs(x - round(x)) + fabs(y - round(y)) < .01;
-                bool be_agressive = step_rand_int % 2 == 0 || always_aggressive == 1;
+                bool be_agressive = step_rand_int % 2 == 0 || always_aggressive != 0;
 
                 if ((ent->vx == 0 && ent->vy == 0) || is_at_junction) {
                     std::vector<int> adj_elems;
