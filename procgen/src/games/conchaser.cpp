@@ -302,7 +302,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
     }
 
     bool can_eat_enemies() {
-        return (cur_time - eat_time < eat_timeout) || always_can_eat == 0;
+        return (cur_time - eat_time < eat_timeout) || always_can_eat > 0;
     }
 
     void spawn_egg(int enemy_cell) {
