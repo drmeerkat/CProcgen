@@ -228,8 +228,8 @@ class ConfoundedChaserGame : public BasicAbstractGame {
             for (int j : selected_idxs) {
                 int cell = quadrant[j];
                 // decide whether to spawn a toxic orb
-                // currently toxic orb chance is set at 30%
-                if (rand_gen.randint(0, 100) < 70) {
+                // currently toxic orb chance is set at 20%
+                if (rand_gen.randint(0, 100) < 80) {
                     if (orb_color > 0 && orb_color < 4){
                         // all fixed to be yellow
                         spawn_entity_at_idx(cell, 0.4f, LARGE_ORB);
