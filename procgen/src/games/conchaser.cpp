@@ -228,8 +228,8 @@ class ConfoundedChaserGame : public BasicAbstractGame {
             for (int j : selected_idxs) {
                 int cell = quadrant[j];
                 // decide whether to spawn a toxic orb
-                // currently toxic orb chance is set at 20% 
-                if (rand_gen.randint(0, 100) < 80) {
+                // currently toxic orb chance is set at 50% 
+                if (rand_gen.randint(0, 100) < 50) {
                     if (orb_color > 0 && orb_color < 4){
                         // all fixed to be yellow
                         spawn_entity_at_idx(cell, 0.4f, LARGE_ORB);
@@ -412,11 +412,11 @@ class ConfoundedChaserGame : public BasicAbstractGame {
             }
         };
 
-        // Only allow to respawn when the context is set to so
-        if (num_enemies < total_enemies) {
-            int selected_idx = step_rand_int % free_cells.size();
-            spawn_egg(free_cells[selected_idx]);
-        }
+        // Try the version without ghost respawn
+        // if (num_enemies < total_enemies) {
+        //     int selected_idx = step_rand_int % free_cells.size();
+        //     spawn_egg(free_cells[selected_idx]);
+        // }
 
         int agent_idx = get_agent_index();
 
