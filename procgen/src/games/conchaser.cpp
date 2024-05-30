@@ -38,7 +38,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
     int orbs_collected = 0;
     int maze_dim = 0;
     int always_can_eat = 0;
-    int always_aggressive = 1;
+    int not_allow_respawn = 0;
     int orb_color = 0;
 
     ConfoundedChaserGame()
@@ -168,7 +168,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
         // Hardness Mode setting is replaced by context API altogether
         maze_dim = 11;
         always_can_eat = context.at(0);
-        always_aggressive = context.at(1);
+        not_allow_respawn = context.at(1);
         total_enemies = context.at(2);
         int extra_orb_sign = context.at(3);
         orb_color = context.at(4);
@@ -343,7 +343,7 @@ class ConfoundedChaserGame : public BasicAbstractGame {
 
         float default_enemy_speed = .5;
         // make the weakened enemies even slower
-        float vscale = (can_eat_enemies() && always_aggressive == 0) ? (default_enemy_speed * .5) : (default_enemy_speed); 
+        float vscale = (can_eat_enemies()) ? (default_enemy_speed * .5) : (default_enemy_speed); 
         step_data.can_eat = can_eat_enemies();
 
         for (int j = (int)(entities.size()) - 1; j >= 0; j--) {
@@ -366,13 +366,13 @@ class ConfoundedChaserGame : public BasicAbstractGame {
                 float x = ent->x - .5;
                 float y = ent->y - .5;
 
-                int dist_scale = (can_eat_enemies() && always_aggressive == 0) ? -1 : 1;
+                int dist_scale = (can_eat_enemies()) ? -1 : 1;
 
                 int enemy_idx = to_grid_idx(x, y);
                 int agent_idx = to_grid_idx(agent->x, agent->y);
 
                 bool is_at_junction = fabs(x - round(x)) + fabs(y - round(y)) < .01;
-                bool be_agressive = step_rand_int % 2 == 0 || always_aggressive != 0;
+                bool be_agressive = step_rand_int % 2 == 0;
 
                 if ((ent->vx == 0 && ent->vy == 0) || is_at_junction) {
                     std::vector<int> adj_elems;
@@ -412,11 +412,11 @@ class ConfoundedChaserGame : public BasicAbstractGame {
             }
         };
 
-        // Try the version without ghost respawn
-        // if (num_enemies < total_enemies) {
-        //     int selected_idx = step_rand_int % free_cells.size();
-        //     spawn_egg(free_cells[selected_idx]);
-        // }
+        // For causally not aligned curriculum, they will set not-allow-respawn = 1
+        if (num_enemies < total_enemies && not_allow_respawn == 0) {
+            int selected_idx = step_rand_int % free_cells.size();
+            spawn_egg(free_cells[selected_idx]);
+        }
 
         int agent_idx = get_agent_index();
 
